@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Transportation Carbon Calculator</title>
+  <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+  <h1>Transportation Carbon Calculator</h1>
+  <form id="carbonForm">
+    <div id="transportationOptions">
+      <!-- Transportation options will be dynamically populated here -->
+    </div>
+    <button type="submit">Calculate</button>
+    <button type="button" id="nextButton">Next</button>
+  </form>
+  <div id="result" style="display: none;">
+    <h3>Your Transportation Carbon Footprint</h3>
+    <p id="transportationResult"></p>
+    <p id="totalResult"></p>
+  </div>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      // Retrieve user details from LocalStorage
+      const userDetails = JSON.parse(localStorage.getItem("userDetails"));
+  
+      if (userDetails && userDetails.transportation) {
+        const transportationOptions = document.getElementById("transportationOptions");
+        const uniqueVehicles = new Set(userDetails.transportation);
+  
+        uniqueVehicles.forEach((transport, index) => {
+          const transportDiv = document.createElement("div");
+          transportDiv.classList.add("transportation-item");
+          transportDiv.innerHTML = `
+            <label>
+              ${transport} (km):
+              <input type="number" id="transportation-${index}" required>
+            </label>
+          `;
+          transportationOptions.appendChild(transportDiv);
+        });
+      } else {
+        // Handle case when there's no transportation data
+        console.warn("No transportation details found in LocalStorage");
+      }
+    });
+  
+    document.getElementById("carbonForm").addEventListener("submit", function (event) {
+      event.preventDefault();
+  
+      const emissionFactors = {
+        "Petrol-Two Wheeler": 0.21,
+        "Petrol-Three Wheeler": 0.25,
+        "Petrol-Four Wheeler": 0.27,
+        "Petrol-Eight Wheeler": 0.3,
+        "Diesel-Two Wheeler": 0.23,
+        "Diesel-Three Wheeler": 0.28,
+        "Diesel-Four Wheeler": 0.3,
+        "Diesel-Eight Wheeler": 0.35,
+        "Electric-Two Wheeler": 0.1,
+        "Electric-Three Wheeler": 0.15,
+        "Electric-Four Wheeler": 0.18,
+        "Electric-Eight Wheeler": 0.2,
+      };
+  
+      const transportationOptions = document.querySelectorAll(".transportation-item");
+      let totalEmission = 0;
+      let transportationResult = '';
+  
+      transportationOptions.forEach((option, index) => {
+        const transportType = option.querySelector("label").textContent.split(" ")[0];
+        const distance = parseFloat(option.querySelector("input").value);
+        const transportEmission = distance * emissionFactors[transportType];
+        totalEmission += transportEmission;
+  
+        transportationResult += `${transportType}: ${transportEmission.toFixed(2)} kg CO2<br>`;
+      });
+  
+      document.getElementById("transportationResult").innerHTML = transportationResult;
+      document.getElementById("totalResult").textContent = `Total: ${totalEmission.toFixed(2)} kg CO2`;
+      document.getElementById("result").style.display = "block";
+    });
+  
+    document.getElementById("nextButton").addEventListener("click", function () {
+      window.location.href = "home.html";
+    });
+  </script>  
+</body>
+</html>

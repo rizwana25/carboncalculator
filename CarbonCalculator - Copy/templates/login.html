@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link rel="stylesheet" href="/static/css/styles.css" />
+    <style>
+   
+    </style>
+  </head>
+  <body>
+    <h1>Login</h1>
+    <div class="card">
+      <form id="loginForm">
+        <label for="loginEmail">Email:</label>
+        <input
+          type="email"
+          id="loginEmail"
+          placeholder="Enter your email"
+          required
+        />
+        <label for="loginPassword">Password:</label>
+        <input
+          type="password"
+          id="loginPassword"
+          placeholder="Enter your password"
+          required
+        />
+        <button type="submit">Login</button>
+      </form>
+      <div id="errorContainer" style="display: none; color: red; margin-top: 10px;"></div>
+      <p class="text-center mt-20">
+        Don't have an account? <a href="/signup.html">Signup here</a><br>
+        Forgot your password? <a href="/fpassword.html" target="_blank">Click here</a>
+      </p>
+    </div>
+
+    <script>
+      // Add event listener for form submission
+      document
+        .getElementById("loginForm")
+        .addEventListener("submit", function (event) {
+          event.preventDefault();
+
+          // Collect user email and password
+          const userDetails = {
+            email: document.getElementById("loginEmail").value.trim(),
+            password: document.getElementById("loginPassword").value.trim(),
+          };
+
+          // Send POST request to Flask backend
+          fetch("/login", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(userDetails),
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.message === "Login successful") {
+                window.location.href = "main.html"; // Redirect to main page upon success
+              } else {
+                displayError(data.message); // Display error message
+              }
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+              displayError("An error occurred. Please try again."); // Handle errors
+            });
+        });
+
+      // Function to display error messages
+      function displayError(message) {
+        const errorContainer = document.getElementById("errorContainer");
+        errorContainer.textContent = message;
+        errorContainer.style.display = "block";
+      }
+    </script>
+  </body>
+</html>
+

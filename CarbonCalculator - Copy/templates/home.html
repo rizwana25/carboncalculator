@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home Carbon Calculator</title>
+  <link rel="stylesheet" href="/static/css/styles.css">
+  <link rel="navbar" href="navbar.html">
+</head>
+<body>
+  <h1>Home Carbon Calculator</h1>
+  <form id="carbonForm">
+    <div id="devicesContainer"></div>
+    <button type="submit">Calculate</button>
+  </form>
+  
+  <div id="result" style="display: none;">
+    <h3>Your Home Carbon Footprint</h3>
+    <p id="devicesResult"></p>
+    <p id="totalResult"></p>
+  </div>
+  
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      // Retrieve data from LocalStorage
+      const userDetails = JSON.parse(localStorage.getItem("userDetails"));
+
+      if (userDetails && userDetails.devices) {
+        const devicesContainer = document.getElementById("devicesContainer");
+        const uniqueDevices = new Set(userDetails.devices);
+
+        uniqueDevices.forEach(device => {
+          const label = document.createElement("label");
+          label.textContent = `${device} (kWh):`;
+          const input = document.createElement("input");
+          input.type = "number";
+          input.id = device;
+          input.required = true;
+          devicesContainer.appendChild(label);
+          devicesContainer.appendChild(input);
+        });
+      } else {
+        console.warn("No device details found in LocalStorage");
+      }
+    });
+
+    document.getElementById("carbonForm").addEventListener("submit", function(event) {
+      event.preventDefault();
+      let devicesTotal = 0;
+      const devices = document.querySelectorAll("#devicesContainer input");
+      devices.forEach(input => {
+        const deviceValue = parseFloat(input.value) * 0.1; // Example factor for devices
+        devicesTotal += deviceValue;
+      });
+
+      document.getElementById("devicesResult").textContent = `Devices: ${devicesTotal.toFixed(2)} kg CO2`;
+      document.getElementById("totalResult").textContent = `Total: ${devicesTotal.toFixed(2)} kg CO2`;
+      document.getElementById("result").style.display = "block";
+    });
+  </script>
+</body>
+</html>

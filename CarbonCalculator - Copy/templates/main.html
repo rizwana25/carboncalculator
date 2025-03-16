@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Main Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    /* General Styles */
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+      margin: 0;
+      color: #333;
+      box-sizing: border-box;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: calc(100vh - 60px); /* Adjust height for navbar */
+      padding: 20px;
+      text-align: center;
+    }
+
+    h1 {
+      font-weight: 600;
+      font-size: 2.5em;
+      color: #34495e;
+      margin-bottom: 40px;
+      animation: fadeInDown 1s ease both;
+    }
+
+    .category-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      grid-gap: 20px;
+      width: 100%;
+      max-width: 800px;
+    }
+
+    .category-block {
+      background: rgba(255, 255, 255, 0.9);
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s, box-shadow 0.3s;
+      animation: fadeInUp 1s ease both;
+      cursor: pointer;
+    }
+
+    .category-block:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .category-block h2 {
+      margin: 0;
+      font-size: 1.5em;
+      color: #34495e;
+    }
+
+    .button {
+      text-decoration: none;
+      font-size: 1.1em;
+      color: #fff;
+      background-color: #2980b9;
+      border: none;
+      border-radius: 5px;
+      padding: 10px 20px;
+      transition: background-color 0.3s, transform 0.3s;
+      margin-top: 40px;
+      animation: fadeInUp 1s ease both;
+    }
+
+    .button:hover {
+      background-color: #1A5276;
+      transform: translateY(-3px);
+    }
+
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Navbar Styles */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #2980b9;
+      padding: 0.8rem 1.5rem;
+      color: white;
+    }
+
+    .navbar a {
+      color: white;
+      text-decoration: none;
+      margin: 0 1rem;
+    }
+
+    .navbar a:hover {
+      text-decoration: underline;
+    }
+
+    .navbar .nav-links {
+      display: flex;
+      align-items: center;
+    }
+
+    .navbar .logout-button {
+      background-color: red;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    .navbar .logout-button:hover {
+      background-color: darkred;
+    }
+
+    @media (max-width: 768px) {
+      .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .navbar .nav-links {
+        flex-direction: column;
+        align-items: flex-start;
+        margin-top: 10px;
+      }
+      .navbar a {
+        margin: 0.5rem 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <div class="navbar">
+    <a href="/main.html" class="logo">Daily Carbon Calculator</a>
+    <div class="nav-links">
+      <a href="/report.html">Report</a>
+      <a href="/main.html">Main</a>
+      <a href="/profile.html">Profile</a>
+      <button class="logout-button" onclick="logout()">Logout</button>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="container">
+    <h1>Welcome to Your Carbon Calculator Dashboard</h1>
+    <div class="category-container">
+      <div class="category-block" id="personal">
+        <h2 onclick="window.location.href='energy.html'">Personal</h2>
+      </div>
+      <div class="category-block" id="transportation">
+        <h2 onclick="window.location.href='transportation.html'">Transportation</h2>
+      </div>
+      <div class="category-block" id="home">
+        <h2 onclick="window.location.href='home.html'">Home</h2>
+      </div>
+      <div class="category-block" id="energycalc">
+        <h2 onclick="window.location.href='energycalc.html'">Energy Calculator</h2>
+      </div>
+      <div class="category-block" id="wastecalc">
+        <h2 onclick="window.location.href='wastecalc.html'">Waste Calculator</h2>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Logout functionality
+    function logout() {
+      window.location.href = "/login.html";
+    }
+  </script>
+</body>
+</html>

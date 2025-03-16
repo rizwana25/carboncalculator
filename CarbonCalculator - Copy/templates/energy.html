@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Energy Section</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+
+        /* Section Styling */
+        .section {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        /* Headings */
+        h1, h2 {
+            font-family: 'Georgia', serif;
+            color: #333;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 5px;
+        }
+
+        h2 {
+            font-size: 1.4rem;
+        }
+
+        /* Device Section */
+        .device-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        /* Device Item */
+        .device-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            transition: transform 0.2s ease, background-color 0.2s ease;
+            cursor: pointer;
+        }
+
+        .device-item img {
+            width: 50px;
+            height: 50px;
+            border-radius: 5px;
+        }
+
+        .device-item span {
+            font-size: 1rem;
+            color: #333;
+        }
+
+        /* Hover Effect */
+        .device-item:hover {
+            transform: scale(1.02);
+            background-color: #eaf3ff;
+        }
+
+        /* Other Button */
+        #otherButton {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.2s ease;
+        }
+
+        #otherButton:hover {
+            background-color: #005a9e;
+        }
+
+        /* Form Styling */
+        #otherDeviceForm {
+            margin-top: 20px;
+            display: none;
+            background: #f9f9f9;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        #otherDeviceForm label {
+            font-size: 0.9rem;
+            color: #333;
+        }
+
+        #otherDeviceForm input {
+            padding: 8px;
+            font-size: 1rem;
+            width: 100%;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        #addCustomDevice {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.2s ease;
+        }
+
+        #addCustomDevice:hover {
+            background-color: #218838;
+        }
+
+        /* Selected Devices List */
+        #selectedDevicesList {
+            margin-top: 20px;
+        }
+
+        #selectedDevicesList div {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            background: #ffffff;
+        }
+
+        #selectedDevicesList button {
+            padding: 5px 10px;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background-color 0.2s ease;
+        }
+
+        #selectedDevicesList button:hover {
+            background-color: #c82333;
+        }
+
+        /* TV Selection Styling */
+        #tvSizeSelection {
+            margin-top: 10px;
+            display: none;
+        }
+
+        #tvSizeSelection label {
+            font-size: 0.9rem;
+            color: #333;
+        }
+
+        #tvSizeSelection select {
+            padding: 8px;
+            font-size: 1rem;
+            width: 100%;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        #addTV {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.2s ease;
+        }
+
+        #addTV:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <!-- Energy Section -->
+    <div class="section">
+        <h1>Energy Section</h1>
+
+        <!-- Bulbs Section -->
+        <h2>Bulbs</h2>
+        <div class="device-section">
+            <div class="device-item" data-device="Incandescent Bulb">
+                <img src="/static/icons/incandescent.png" alt="Incandescent Bulb" />
+                <span>Incandescent Bulb</span>
+            </div>
+            <div class="device-item" data-device="CFL Bulb">
+                <img src="/static/icons/cfl.png" alt="CFL Bulb" />
+                <span>CFL Bulb</span>
+            </div>
+            <div class="device-item" data-device="LED Bulb">
+                <img src="/static/icons/led.png" alt="LED Bulb" />
+                <span>LED Bulb</span>
+            </div>
+            <div class="device-item" data-device="Fluorescent Tube Light">
+                <img src="/static/icons/fluorescent.png" alt="Fluorescent Tube Light" />
+                <span>Fluorescent Tube Light</span>
+            </div>
+            <div class="device-item" data-device="LED Tube Light">
+                <img src="/static/icons/led-tube.png" alt="LED Tube Light" />
+                <span>LED Tube Light</span>
+            </div>
+        </div>
+
+        <!-- Fans Section -->
+        <h2>Fans</h2>
+        <div class="device-section">
+            <div class="device-item" data-device="Conventional Ceiling Fan">
+                <img src="/static/icons/conventional-fan.png" alt="Conventional Ceiling Fan" />
+                <span>Conventional Ceiling Fan</span>
+            </div>
+            <div class="device-item" data-device="BLDC Ceiling Fan">
+                <img src="/static/icons/bldc-fan.png" alt="BLDC Ceiling Fan" />
+                <span>BLDC Ceiling Fan</span>
+            </div>
+            <div class="device-item" data-device="Wall Fan">
+                <img src="/static/icons/wall-fan.png" alt="Wall Fan" />
+                <span>Wall Fan</span>
+            </div>
+            <div class="device-item" data-device="Table Fan">
+                <img src="/static/icons/table-fan.png" alt="Table Fan" />
+                <span>Table Fan</span>
+            </div>
+        </div>
+
+        <!-- Washing Machines Section -->
+        <h2>Washing Machines</h2>
+        <div class="device-section">
+            <div class="device-item" data-device="Manual Washing Machine">
+                <img src="/static/icons/manual-wm.png" alt="Manual Washing Machine" />
+                <span>Manual Washing Machine</span>
+            </div>
+            <div class="device-item" data-device="Top Load Washing Machine">
+                <img src="/static/icons/top-load-wm.png" alt="Top Load Washing Machine" />
+                <span>Top Load Washing Machine</span>
+            </div>
+            <div class="device-item" data-device="Front Load Washing Machine">
+                <img src="/static/icons/front-load-wm.png" alt="Front Load Washing Machine" />
+                <span>Front Load Washing Machine</span>
+            </div>
+        </div>
+
+        <!-- Televisions Section -->
+        <h2>Televisions</h2>
+        <div class="device-section">
+            <label for="tvType">Select TV Type:</label>
+            <select id="tvType">
+                <option value="" disabled selected>Select TV Type</option>
+                <option value="Plasma">Plasma</option>
+                <option value="LED">LED</option>
+                <option value="LCD">LCD</option>
+            </select>
+
+            <div id="tvSizeSelection" style="margin-top: 10px; display: none;">
+                <label for="tvSize">Select Screen Size:</label>
+                <select id="tvSize">
+                    <option value="" disabled selected>Select Screen Size</option>
+                    <option value="15">15 inches</option>
+                    <option value="17">17 inches</option>
+                    <option value="19">19 inches</option>
+                    <option value="24">24 inches</option>
+                    <option value="30">30 inches</option>
+                    <option value="32">32 inches</option>
+                    <option value="37">37 inches</option>
+                    <option value="42">42 inches</option>
+                    <option value="50">50 inches</option>
+                </select>
+                <button type="button" id="addTV">Add TV</button>
+            </div>
+        </div>
+
+        <!-- Air Conditioners Section -->
+        <h2>Air Conditioners</h2>
+        <div class="device-section">
+            <h3>Normal ACs</h3>
+            <div class="device-item" data-device="0 Star Normal AC">
+                <span>0 Star Normal AC</span>
+            </div>
+            <div class="device-item" data-device="1 Star Normal AC">
+                <span>1 Star Normal AC</span>
+            </div>
+            <div class="device-item" data-device="2 Star Normal AC">
+                <span>2 Star Normal AC</span>
+            </div>
+            <div class="device-item" data-device="3 Star Normal AC">
+                <span>3 Star Normal AC</span>
+            </div>
+            <div class="device-item" data-device="4 Star Normal AC">
+                <span>4 Star Normal AC</span>
+            </div>
+            <div class="device-item" data-device="5 Star Normal AC">
+                <span>5 Star Normal AC</span>
+            </div>
+
+            <h3>Inverter ACs</h3>
+            <div class="device-item" data-device="0 Star Inverter AC">
+                <span>0 Star Inverter AC</span>
+            </div>
+            <div class="device-item" data-device="1 Star Inverter AC">
+                <span>1 Star Inverter AC</span>
+            </div>
+            <div class="device-item" data-device="2 Star Inverter AC">
+                <span>2 Star Inverter AC</span>
+            </div>
+            <div class="device-item" data-device="3 Star Inverter AC">
+                <span>3 Star Inverter AC</span>
+            </div>
+            <div class="device-item" data-device="4 Star Inverter AC">
+                <span>4 Star Inverter AC</span>
+            </div>
+            <div class="device-item" data-device="5 Star Inverter AC">
+                <span>5 Star Inverter AC</span>
+            </div>
+        </div>
+
+        <!-- Refrigerators Section -->
+        <h2>Refrigerators</h2>
+        <div class="device-section">
+            <div class="device-item" data-device="No Star Refrigerator">
+                <span>No Star Refrigerator</span>
+            </div>
+            <div class="device-item" data-device="1 Star Refrigerator">
+                <span>1 Star Refrigerator</span>
+            </div>
+            <div class="device-item" data-device="2 Star Refrigerator">
+                <span>2 Star Refrigerator</span>
+            </div>
+            <div class="device-item" data-device="3 Star Refrigerator">
+                <span>3 Star Refrigerator</span>
+            </div>
+            <div class="device-item" data-device="4 Star Refrigerator">
+                <span>4 Star Refrigerator</span>
+            </div>
+            <div class="device-item" data-device="5 Star Refrigerator">
+                <span>5 Star Refrigerator</span>
+            </div>
+        </div>
+
+        <!-- Inverters Section -->
+        <h2>Inverters</h2>
+        <div class="device-section">
+            <div class="device-item" data-device="600 VA Inverter">
+                <img src="/static/icons/inverter.png" alt="600 VA Inverter" />
+                <span>600 VA Inverter</span>
+            </div>
+            <div class="device-item" data-device="800 VA Inverter">
+                <img src="/static/icons/inverter.png" alt="800 VA Inverter" />
+                <span>800 VA Inverter</span>
+            </div>
+            <div class="device-item" data-device="1000 VA Inverter">
+                <img src="/static/icons/inverter.png" alt="1000 VA Inverter" />
+                <span>1000 VA Inverter</span>
+            </div>
+            <div class="device-item" data-device="1500 VA Inverter">
+                <img src="/static/icons/inverter.png" alt="1500 VA Inverter" />
+                <span>1500 VA Inverter</span>
+            </div>
+        </div>
+
+        <!-- Other Appliances Section -->
+        <h2>Other Appliances</h2>
+        <div class="device-section">
+            <div class="device-item" data-device="Microwave Oven">
+                <img src="/static/icons/microwave.png" alt="Microwave Oven" />
+                <span>Microwave Oven</span>
+            </div>
+            <div class="device-item" data-device="Desktop Computer">
+                <img src="/static/icons/desktop.png" alt="Desktop Computer" />
+                <span>Desktop Computer</span>
+            </div>
+            <div class="device-item" data-device="Laptop Charging">
+                <img src="/static/icons/laptop.png" alt="Laptop Charging" />
+                <span>Laptop Charging</span>
+            </div>
+            <div class="device-item" data-device="Phone Charging">
+                <img src="/static/icons/phone.png" alt="Phone Charging" />
+                <span>Phone Charging</span>
+            </div>
+            <div class="device-item" data-device="Juicer Machine">
+                <img src="/static/icons/juicer.png" alt="Juicer Machine" />
+                <span>Juicer Machine</span>
+            </div>
+            <div class="device-item" data-device="Iron Box">
+                <img src="/static/icons/iron.png" alt="Iron Box" />
+                <span>Iron Box</span>
+            </div>
+            <div class="device-item" data-device="LPG Stove">
+                <img src="/static/icons/lpg-stove.png" alt="LPG Stove" />
+                <span>LPG Stove</span>
+            </div>
+        </div>
+
+         <!-- "Other" Button -->
+         <button id="otherButton">Other</button>
+         <div id="otherDeviceForm">
+             <h3>Add Other Device</h3>
+             <label for="customDeviceName">Device Name:</label>
+             <input type="text" id="customDeviceName" placeholder="Enter device name" />
+             <button type="button" id="addCustomDevice">Add Device</button>
+         </div>
+        <!-- Selected Devices -->
+        <h3>Selected Devices:</h3>
+        <div id="selectedDevicesList"></div>
+    </div>
+    <!-- Save and Next Buttons -->
+<button id="saveButton">Save</button>
+<a href="food.html"><button id="nextButton">Next</button></a>
+
+
+    <script>
+        // JavaScript for Energy Section
+        const deviceItems = document.querySelectorAll('.device-item');
+        const otherButton = document.getElementById('otherButton');
+        const otherDeviceForm = document.getElementById('otherDeviceForm');
+        const addCustomDeviceButton = document.getElementById('addCustomDevice');
+        const selectedDevicesList = document.getElementById('selectedDevicesList');
+
+        // Array to store selected devices
+        let selectedDevices = [];
+
+        // Function to add a device to the selected list
+        function addDevice(deviceName) {
+            if (!selectedDevices.includes(deviceName)) {
+                selectedDevices.push(deviceName);
+                updateSelectedDevicesList();
+            }
+        }
+
+        // Function to remove a device from the selected list
+        function removeDevice(deviceName) {
+            selectedDevices = selectedDevices.filter(device => device !== deviceName);
+            updateSelectedDevicesList();
+        }
+
+        // Function to update the selected devices list
+        function updateSelectedDevicesList() {
+            selectedDevicesList.innerHTML = '';
+            selectedDevices.forEach(device => {
+                const deviceDiv = document.createElement('div');
+                deviceDiv.innerHTML = `
+                    <span>${device}</span>
+                    <button onclick="removeDevice('${device}')">Remove</button>
+                `;
+                selectedDevicesList.appendChild(deviceDiv);
+            });
+        }
+
+        // Add event listeners to device items
+        deviceItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const deviceName = item.getAttribute('data-device');
+                addDevice(deviceName);
+            });
+        });
+
+        // Show/hide the "Other" form
+        otherButton.addEventListener('click', () => {
+            otherDeviceForm.style.display = otherDeviceForm.style.display === 'none' ? 'block' : 'none';
+        });
+
+        // Add custom device
+        addCustomDeviceButton.addEventListener('click', () => {
+            const deviceName = document.getElementById('customDeviceName').value;
+
+            if (deviceName) {
+                addDevice(deviceName);
+                document.getElementById('customDeviceName').value = ''; // Clear the input
+                otherDeviceForm.style.display = 'none'; // Hide the form
+            } else {
+                alert('Please enter a device name.');
+            }
+        });
+        // TV Selection Logic
+        const tvTypeSelect = document.getElementById('tvType');
+        const tvSizeSelection = document.getElementById('tvSizeSelection');
+        const addTVButton = document.getElementById('addTV');
+
+        tvTypeSelect.addEventListener('change', () => {
+            if (tvTypeSelect.value) {
+                tvSizeSelection.style.display = 'block';
+            } else {
+                tvSizeSelection.style.display = 'none';
+            }
+        });
+
+        addTVButton.addEventListener('click', () => {
+            const tvType = tvTypeSelect.value;
+            const tvSize = document.getElementById('tvSize').value;
+
+            if (tvType && tvSize) {
+                addDevice(`${tvType} TV (${tvSize} inches)`);
+                tvTypeSelect.value = '';
+                document.getElementById('tvSize').value = '';
+                tvSizeSelection.style.display = 'none';
+            } else {
+                alert('Please select both TV type and size.');
+            }
+        });
+        document.getElementById('saveButton').addEventListener('click', () => {
+  if (selectedDevices.length === 0) {
+    alert('Please select at least one device!');
+    return;
+  }
+
+  // Convert selected devices to a comma-separated string
+  const devicesString = selectedDevices.join(', ');
+
+  // Send data to backend
+  fetch('/save_energy_devices', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ devices: devicesString }),
+  })
+    .then(response => response.json())
+    .then(data => {
+      if (data.message) {
+        alert(data.message); // Show success message
+      } else if (data.error) {
+        alert(`Error: ${data.error}`);
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      alert('An error occurred while saving the data.');
+    });
+});
+
+
+    </script>
+</body>
+</html>

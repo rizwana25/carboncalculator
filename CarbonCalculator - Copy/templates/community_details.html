@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Community Details</title>
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      padding: 20px;
+      color: #333;
+    }
+
+    .details-card {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    h1, h2, h3 {
+      color: #34495e;
+      margin-bottom: 20px;
+    }
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    li {
+      font-size: 1em;
+      color: #666;
+      margin-bottom: 10px;
+    }
+
+    .back-button {
+      text-decoration: none;
+      font-size: 1em;
+      color: #fff;
+      background-color: #2980B9;
+      border: none;
+      border-radius: 5px;
+      padding: 10px 20px;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: background-color 0.3s ease;
+    }
+
+    .back-button:hover {
+      background-color: #1A5276;
+    }
+  </style>
+</head>
+<body>
+  <div class="details-card">
+    <h1>{{ community_name }}</h1>
+    <h2>Unique Code: {{ unique_code }}</h2>
+
+    <h3>Admin: {{ admin_name }}</h3>
+
+    <h3>Members</h3>
+    <ul>
+      {% for member in members %}
+        <li>{{ member[0] }}</li>
+      {% endfor %}
+    </ul>
+
+    <a href="/community.html" class="back-button">Back to Communities</a>
+  </div>
+</body>
+</html>

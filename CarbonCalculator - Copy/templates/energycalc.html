@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Energy Carbon Footprint Calculator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: linear-gradient(135deg, #eff6fc, #dbe3ea);
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #ffffff;
+      border-radius: 15px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      font-size: 2rem;
+      font-weight: 600;
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 20px;
+    }
+
+    .device-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px;
+      margin-bottom: 10px;
+      border-radius: 10px;
+      background: #f8faff;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .device-row:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .device-row input {
+      width: 60px;
+      height: 30px;
+      border: 1px solid #d0d7de;
+      border-radius: 5px;
+      padding: 5px;
+      text-align: center;
+    }
+
+    .device-row input:focus {
+      outline: none;
+      border: 1px solid #3498db;
+      box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+    }
+
+    .results {
+      margin-top: 20px;
+      padding: 20px;
+      background: #f8faff;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+    }
+
+    .results div {
+      font-size: 1rem;
+      font-weight: 500;
+      margin-bottom: 10px;
+    }
+
+    button {
+      display: block;
+      width: 100%;
+      margin-top: 15px;
+      padding: 12px 0;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #fff;
+      background: linear-gradient(90deg, #3498db, #2980b9);
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 25px rgba(52, 152, 219, 0.5);
+    }
+
+    button:focus {
+      outline: none;
+    }
+
+    .button-disabled {
+      background: #d3d3d3;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Energy Carbon Footprint Calculator</h1>
+    <div id="deviceList"></div>
+    <button id="saveButton">Save</button>
+    <button id="submitButton" class="button-disabled" disabled>Submit</button>
+    <div id="results" class="results"></div>
+  </div>
+  <script>
+   let savedData = {}; // Object to store saved data locally
+
+// Fetch selected devices from the backend
+fetch('/get_energy_devices')
+  .then(response => response.json())
+  .then(data => {
+    const devices = data.devices || [];
+    const deviceListDiv = document.getElementById('deviceList');
+
+    devices.forEach(device => {
+      const deviceRow = document.createElement('div');
+      deviceRow.className = 'device-row';
+      deviceRow.innerHTML = `
+        <span>${device}</span>
+        <input type="number" min="0" step="1" placeholder="Hours" data-device="${device}" />
+      `;
+      deviceListDiv.appendChild(deviceRow);
+    });
+
+    if (devices.length === 0) {
+      deviceListDiv.innerHTML = '<p>No devices selected.</p>';
+    }
+
+    loadSavedData(devices); // Load saved data into inputs
+  });
+
+// Load saved data on page load
+function loadSavedData(devices) {
+  const localData = JSON.parse(localStorage.getItem('savedData')) || {};
+  const inputs = document.querySelectorAll('#deviceList input');
+
+  inputs.forEach(input => {
+    const deviceName = input.getAttribute('data-device');
+    if (localData[deviceName]) {
+      input.value = localData[deviceName];
+    }
+  });
+
+  savedData = localData; // Set saved data object
+  if (Object.keys(savedData).length > 0) {
+    document.getElementById('submitButton').disabled = false;
+    document.getElementById('submitButton').classList.remove('button-disabled');
+  }
+
+  // Automatically calculate carbon footprint
+  calculateCarbonFootprint();
+}
+
+// Save button functionality
+document.getElementById('saveButton').addEventListener('click', () => {
+  const inputs = document.querySelectorAll('#deviceList input');
+  savedData = {}; // Reset saved data
+
+  inputs.forEach(input => {
+    const deviceName = input.getAttribute('data-device');
+    const hours = parseFloat(input.value) || 0;
+    savedData[deviceName] = hours;
+  });
+
+  localStorage.setItem('savedData', JSON.stringify(savedData)); // Save locally
+  alert('Your data has been saved!');
+  document.getElementById('submitButton').disabled = false; // Enable submit
+  document.getElementById('submitButton').classList.remove('button-disabled');
+  calculateCarbonFootprint(); // Update carbon calculation after saving
+});
+
+// Submit button functionality
+document.getElementById('submitButton').addEventListener('click', () => {
+  const inputs = document.querySelectorAll('#deviceList input');
+  let totalCarbon = 0;
+
+  inputs.forEach(input => {
+    const deviceName = input.getAttribute('data-device');
+    const hours = parseFloat(input.value) || 0;
+
+    // Calculate carbon for each device
+    if (predefinedDeviceEmissions[deviceName]) {
+      totalCarbon += predefinedDeviceEmissions[deviceName] * hours;
+    } else {
+      const tvRegex = /(\d+)" (\w+) TV/; // Matches TVs like "32" Plasma TV
+      const match = deviceName.match(tvRegex);
+      if (match) {
+        const size = match[1];
+        const type = match[2];
+        if (tvEmissions[type] && tvEmissions[type][size]) {
+          totalCarbon += tvEmissions[type][size] * hours;
+        }
+      }
+    }
+  });
+
+  // Submit total carbon footprint to the backend
+  fetch('/submit_energy_data', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ carbon: totalCarbon.toFixed(3) }), // Send total carbon
+  })
+    .then(response => response.json())
+    .then(data => {
+      if (data.message) {
+        alert(data.message);
+        document.getElementById('submitButton').disabled = true; // Disable after submit
+        document.getElementById('submitButton').classList.add('button-disabled');
+      } else if (data.error) {
+        alert(`Error: ${data.error}`);
+      }
+    });
+});
+
+// Calculate Carbon Footprint
+function calculateCarbonFootprint() {
+  const inputs = document.querySelectorAll('#deviceList input');
+  let totalFootprint = 0;
+  const resultsDiv = document.getElementById('results');
+  resultsDiv.innerHTML = ''; // Clear previous results
+
+  inputs.forEach(input => {
+    const deviceName = input.getAttribute('data-device');
+    const hours = parseFloat(input.value) || 0;
+    let carbon = 0;
+
+    if (predefinedDeviceEmissions[deviceName]) {
+      carbon = predefinedDeviceEmissions[deviceName] * hours;
+    } else {
+      const tvRegex = /(\d+)" (\w+) TV/; // Matches TVs like "32" Plasma TV
+      const match = deviceName.match(tvRegex);
+      if (match) {
+        const size = match[1];
+        const type = match[2];
+        if (tvEmissions[type] && tvEmissions[type][size]) {
+          carbon = tvEmissions[type][size] * hours;
+        }
+      }
+    }
+
+    totalFootprint += carbon;
+
+    // Display carbon footprint for the device
+    const resultRow = document.createElement('div');
+    resultRow.textContent = `${deviceName}: ${carbon.toFixed(3)} kg CO₂`;
+    resultsDiv.appendChild(resultRow);
+  });
+
+  // Display total carbon footprint
+  const totalDiv = document.createElement('div');
+  totalDiv.style.fontWeight = 'bold';
+  totalDiv.style.marginTop = '10px';
+  totalDiv.textContent = `Total Carbon Footprint: ${totalFootprint.toFixed(3)} kg CO₂`;
+  resultsDiv.appendChild(totalDiv);
+}
+
+// Predefined emission factors
+const predefinedDeviceEmissions = {
+  'Incandescent Bulb': 0.0285,
+  'CFL Bulb': 0.0071,
+  'LED Bulb': 0.0048,
+  'Fluorescent Tube Light': 0.019,
+  'LED Tube Light': 0.0095,
+  'Conventional Ceiling Fan': 0.0356,
+  'BLDC Ceiling Fan': 0.0166,
+  'Wall Fan': 0.0238,
+  'Table Fan': 0.0285,
+  'Manual Washing Machine': 0.095,
+  'Top Load Washing Machine': 0.2375,
+  'Front Load Washing Machine': 0.570,
+  '0 Star Normal AC': 0.855,
+  '1 Star Normal AC': 0.76,
+  '2 Star Normal AC': 0.665,
+  '3 Star Normal AC': 0.57,
+  '4 Star Normal AC': 0.475,
+  '5 Star Normal AC': 0.38,
+  '0 Star Inverter AC': 0.7125,
+  '1 Star Inverter AC': 0.6175,
+  '2 Star Inverter AC': 0.5225,
+  '3 Star Inverter AC': 0.4275,
+  '4 Star Inverter AC': 0.3325,
+  '5 Star Inverter AC': 0.2375,
+  'No Star Refrigerator': 0.0597,
+  '1 Star Refrigerator': 0.0529,
+  '2 Star Refrigerator': 0.0424,
+  '3 Star Refrigerator': 0.0339,
+  '4 Star Refrigerator': 0.0272,
+  '5 Star Refrigerator': 0.0217,
+  '600 VA Inverter': 0.228,
+  '800 VA Inverter': 0.304,
+  '1000 VA Inverter': 0.38,
+  '1500 VA Inverter': 0.57,
+  'Microwave Oven': 0.285,
+  'Desktop Computer': 0.095,
+  'Laptop Charging': 0.0285,
+  'Phone Charging': 0.0095,
+  'Juicer Machine': 0.07125,
+  'Iron Box': 0.2375,
+  'LPG Stove': 0.2682,
+};
+
+// TV emission factors
+const tvEmissions = {
+  Plasma: {
+    "15": 0.0713,
+    "17": 0.0760,
+    "19": 0.0855,
+    "24": 0.1045,
+    "30": 0.1282,
+    "32": 0.1425,
+    "37": 0.1805,
+    "42": 0.220,
+    "50": 0.285,
+  },
+  LED: {
+    "15": 0.0071,
+    "17": 0.0086,
+    "19": 0.0095,
+    "24": 0.0114,
+    "30": 0.0238,
+    "32": 0.0261,
+    "37": 0.0285,
+    "42": 0.0380,
+    "50": 0.0475,
+  },
+  LCD: {
+    "15": 0.0086,
+    "17": 0.0095,
+    "19": 0.0105,
+    "24": 0.0190,
+    "30": 0.0285,
+    "32": 0.0333,
+    "37": 0.0380,
+    "42": 0.0570,
+    "50": 0.0713,
+  },
+};
+
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,132 @@
+/* Reset some basic elements */
+body, h1, h2, h3, p, ul, li, form, input, select, button, div {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Arial', sans-serif;
+}
+
+/* Body styling */
+body {
+  background-color: #f4f4f9;
+  color: #333;
+  line-height: 1.6;
+  padding: 20px;
+}
+
+/* Heading styles */
+h1, h2, h3 {
+  margin-bottom: 10px;
+  color: #4a90e2;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Form styles */
+form {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+input, select, button {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+button {
+  background-color: #4a90e2;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #357ab8;
+}
+
+/* Link styles */
+a {
+  color: #4a90e2;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Card container styles */
+.card {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 20px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.card h2 {
+  margin-bottom: 20px;
+  color: #4a90e2;
+}
+
+/* Device list styling */
+#deviceList, #vehicleList {
+  margin-top: 10px;
+}
+
+.device-item, .vehicle-item {
+  background: #e7f3ff;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 5px;
+}
+
+/* Result section styling */
+#result {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#result h3 {
+  color: #4a90e2;
+}
+
+#result p {
+  margin-bottom: 10px;
+  font-size: 1.2em;
+}
+
+/* Custom utility classes */
+.text-center {
+  text-align: center;
+}
+
+.mt-20 {
+  margin-top: 20px;
+}
+
+.mb-20 {
+  margin-bottom: 20px;
+}

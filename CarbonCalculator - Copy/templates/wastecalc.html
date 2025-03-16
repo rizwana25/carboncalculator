@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Waste Carbon Emission Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #f9f9f9;
+      color: #333;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    .waste-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      margin-bottom: 10px;
+      background: #f8faff;
+    }
+
+    .waste-row input {
+      width: 60px;
+      padding: 5px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      text-align: center;
+    }
+
+    .results {
+      margin-top: 20px;
+      padding: 10px;
+      background: #e8f8e9;
+      border-radius: 5px;
+    }
+
+    button {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      margin-top: 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .button-disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Waste Carbon Emission Calculator</h1>
+    <div id="wasteList"></div>
+    <button id="saveButton">Save</button>
+    <button id="submitButton" class="button-disabled" disabled>Submit</button>
+    <div class="results" id="results"></div>
+  </div>
+
+  <script>
+    // Retrieve selected waste from localStorage
+    const selectedWaste = JSON.parse(localStorage.getItem('selectedWaste')) || [];
+    const wasteListDiv = document.getElementById('wasteList');
+    const resultsDiv = document.getElementById('results');
+
+    // Carbon emission factors for disposed and burned waste
+    const carbonEmissionFactors = {
+      disposed: {
+        'wet-waste': 0.25,
+        'dry-waste': 0.5,
+        'e-waste': 1.2,
+        'textile-waste': 0.8,
+        'footwear-waste': 0.6,
+        'furniture-waste': 1.5,
+      },
+      burned: {
+        'wet-waste': 1.5,
+        'dry-waste': 4,
+        'e-waste': 30,
+        'textile-waste': 15,
+        'footwear-waste': 20,
+        'furniture-waste': 15,
+      },
+    };
+
+    // Display waste list with input fields for quantity
+    selectedWaste.forEach(item => {
+      const wasteRow = document.createElement('div');
+      wasteRow.className = 'waste-row';
+      wasteRow.innerHTML = `
+        <span>${item.type.replace('-', ' ')} (${item.category})</span>
+        <input type="number" min="0" step="1" placeholder="Quantity (kg)" data-type="${item.type}" data-category="${item.category}" />
+      `;
+      wasteListDiv.appendChild(wasteRow);
+    });
+
+    // Save button functionality
+    document.getElementById('saveButton').addEventListener('click', () => {
+      const inputs = document.querySelectorAll('.waste-row input');
+      let totalCarbon = 0;
+
+      resultsDiv.innerHTML = ''; // Clear previous results
+
+      inputs.forEach(input => {
+        const type = input.getAttribute('data-type');
+        const category = input.getAttribute('data-category');
+        const quantity = parseFloat(input.value) || 0;
+
+        // Calculate carbon emissions for each waste type
+        const emissionFactor = carbonEmissionFactors[category]?.[type] || 0;
+        const emissions = quantity * emissionFactor;
+        totalCarbon += emissions;
+
+        // Display individual emissions
+        const resultRow = document.createElement('div');
+        resultRow.textContent = `${type.replace('-', ' ')} (${category}): ${emissions.toFixed(2)} kg CO₂`;
+        resultsDiv.appendChild(resultRow);
+      });
+
+      // Display total emissions
+      const totalRow = document.createElement('div');
+      totalRow.style.fontWeight = 'bold';
+      totalRow.textContent = `Total Carbon Emissions: ${totalCarbon.toFixed(2)} kg CO₂`;
+      resultsDiv.appendChild(totalRow);
+
+      // Enable Submit button
+      document.getElementById('submitButton').disabled = false;
+      document.getElementById('submitButton').classList.remove('button-disabled');
+
+      // Save total carbon footprint locally
+      localStorage.setItem('totalWasteCarbon', totalCarbon.toFixed(2));
+    });
+
+    // Submit button functionality
+    document.getElementById('submitButton').addEventListener('click', () => {
+      const totalCarbon = localStorage.getItem('totalWasteCarbon');
+
+      fetch('/submit_waste', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ wasteCarbon: totalCarbon }),
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.message) {
+          alert(data.message);
+          document.getElementById('submitButton').disabled = true; // Disable Submit after submission
+          document.getElementById('submitButton').classList.add('button-disabled');
+        }
+      })
+      .catch(error => console.error('Error submitting data:', error));
+    });
+  </script>
+</body>
+</html>

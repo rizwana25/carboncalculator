@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Personal Carbon Calculator</title>
+  <link rel="stylesheet" href="\static\css\styles.css">
+</head>
+<body>
+  <h1>Personal Carbon Calculator</h1>
+  <form id="carbonForm">
+    <label>
+      Food Consumption (kg):
+      <input type="number" id="food" required>
+    </label>
+    <button type="submit">Calculate</button>
+    <button type="button" id="nextButton">Next</button>
+  </form>
+  <div id="result" style="display: none;">
+    <h3>Your Personal Carbon Footprint</h3>
+    <p id="foodResult"></p>
+    <p id="totalResult"></p>
+  </div>
+  <script src="../js/carbonCalculator.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const details = JSON.parse(localStorage.getItem("userDetails"));
+      if (details) {
+        document.getElementById("food").value = details.food;
+      }
+    });
+
+    document.getElementById("carbonForm").addEventListener("submit", function(event) {
+      event.preventDefault();
+      const food = parseFloat(document.getElementById("food").value) * 0.15; // Example factor
+      const total = food;
+
+      document.getElementById("foodResult").textContent = `Food Consumption: ${food.toFixed(2)} kg CO2`;
+      document.getElementById("totalResult").textContent = `Total: ${total.toFixed(2)} kg CO2`;
+      document.getElementById("result").style.display = "block";
+    });
+
+    document.getElementById("nextButton").addEventListener("click", function () {
+      window.location.href = "transportation.html";
+    });
+  </script>
+</body>
+</html>
